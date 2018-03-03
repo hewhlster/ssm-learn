@@ -1,4 +1,4 @@
-<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.text.SimpleDateFormat" %>
 <%@ page contentType="text/html; charset=utf-8"  pageEncoding="utf-8" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -39,8 +39,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<div class="navbar-collapse" id="mymenu">
 				<ul class="nav navbar-nav">
 					<li>&nbsp;&nbsp;</li>
-					<li>&nbsp;&nbsp;</li>
-					<li><a href="<%=basePath%>user/logout.do">退出</a></li>
+					<li>欢迎您【${logineduser.username}】<a href="<%=basePath%>user/logout.do">退出</a></li>
 				</ul>
 			</div>
 		</nav>
@@ -112,7 +111,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						<th>员工姓名</th>
 						<th>工种</th>
 						<th>入职日期</th>
-						<th>部门编号</th>
+						<th>部门</th>
 						<th>操作</th>
 					</tr>
 					</thead>
@@ -124,7 +123,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								<td>${e.ename }</td>
 								<td>${e.job }</td>
 								<td><fmt:formatDate value="${e.hiredate }" pattern="yyyy-MM-dd"/>  </td>
-								<td>${e.dept }</td>
+								<td>${e.dept.dname }</td>
 								<td>
 									<button class="btn btn-sm btn-info edit" value="${e.empid}">编辑</button>
 									<button class="btn btn-sm btn-danger" onclick="javascript:if( confirm('确认删除吗?')==true)location.href='<%=basePath%>emp/delete.do?empid=${e.empid}'">删除</button>
@@ -140,7 +139,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		</div>
 		
 		<!-- 新增、编辑 模态框 -->
-		<div class="modal fade" role="dialog" id="newdialog" tabindex="-1" data-backdrop="static">
+		<div class="modal" role="dialog" id="newdialog" tabindex="-1" data-backdrop="static">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -184,7 +183,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							<div id="" class="form-group">
 								<label for="dept" class="col-sm-2 control-label">部门</label>
 								<div class="col-sm-10">
-									<input type="text" id="dept" name="dept" class="form-control" placeholder="最多五颗星" />
+									<select id="dept" name="did" class="form-control" >
+										
+									</select>
+									<!--  <input type="text" id="dept" name="dept" class="form-control" placeholder="" />-->
 								</div>
 							</div>
 						</form>
@@ -254,9 +256,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		                            message: '员工姓名不能为空'
 		                        },
 		                        stringLength: {
-		                            min: 3,
+		                            min: 2,
 		                            max: 8,
-		                            message: '员工姓名长度必须在3到8之间'
+		                            message: '员工姓名长度必须在2到8之间'
 		                        }
 		                    }
 		                },
@@ -282,7 +284,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		                			message:"日期格式不正"
 		                		}
 		                	}
-		                },
+		                }
+		                /*
 		                dept:{
 		                	validators:{
 		                		notEmpty:{
@@ -295,6 +298,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		                        }
 		                	}
 		                }
+		                */
 		        	}
 		        });
 		}
@@ -343,7 +347,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		function edit(id){
 			//删除empno重复的校验
 			//$("#empfrm").bootstrapValidator("removeField","empno");
-			
+			var did ="";
 			$.get(
 				"<%=basePath%>emp/detail.do",
 				"id="+id,
@@ -353,11 +357,25 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					$("#ename").val(json.ename);
 					$("#job").val(json.job);
 					$("#hiredate").val(json.hiredate);
-					$("#dept").val(json.dept);					
-					$("#newdialogtitle").html("编辑员工");
-					$("#newdialog").modal();					
+					//$("#dept").val(json.dept);
+					did=json.dept.did;
 				}
-			);			
+			);		
+			$("#newdialogtitle").html("编辑员工");
+			$("#newdialog").modal("show");
+			
+			$("#empno").attr("disabled","disabled");//禁用员工编号控件
+			
+			//选中员工的部门,以下代码在调试时才能有用，待解决
+			$("#dept").find("option[value='"+did+"']").attr("selected","selected");
+			//alert("fdsa");
+			//var js= 
+			
+			//settimeout('$("#dept").find("option[value="+did+"]").attr("selected","selected");',50);
+
+			$("#dept").val(did).trigger("change")
+			
+
 		}
 		
 		
@@ -396,14 +414,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			
 
 			$("#newselect").click(function(){
+				$("#newdialogtitle").html("新增员工");
+				$("#empno").removeAttr("disabled");
 				$("#empid").val("");
 				$("#empno").val("");
 				$("#ename").val("");
 				$("#job").val("");
 				$("#hiredate").val(new Date().format('yyyy-MM-dd'));
 				$("#dept").val("");
-				$("#newdialog").modal("hide");
-
+				//$("#newdialog").modal("hide");
 				$("#newdialog").modal("show");
 			});
 			
@@ -432,7 +451,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			});
 			
 			$(".edit").click(function(){
-				$("#empno").attr("disabled","disabled");
 				edit($(this).val());
 			});
 			
@@ -446,8 +464,24 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		        $("#empfrm").data('bootstrapValidator').destroy();
 		        $('#empfrm').data('bootstrapValidator', null);
 		        formValidator();
-		    });			 
-		});
-		
+		    });			
+			
+			//显示模态框时加载部门信息
+			$("#newdialog").on('shown.bs.modal',function(){
+				//alert("sss");
+				$("#dept").empty();//先清空
+				var html="";
+				//发送AJAX请求取得部门信息
+				$.post(
+						"<%=basePath%>dept/list.do",
+						function(json){
+							$.each(json,function(idx,obj){
+								//加入dept下拉框
+								$("#dept").append("<option value="+obj.did+">"+obj.dname+"</option>");
+							});
+						}
+					);
+				});
+		});		
 	</script>
 </html>

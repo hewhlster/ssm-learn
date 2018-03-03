@@ -21,7 +21,5 @@ public class EmpVo extends Emp {
 	}
 	public void setEnd(Integer end) {
 		this.end = end;
-	}
-	
-	
+	}	
 }

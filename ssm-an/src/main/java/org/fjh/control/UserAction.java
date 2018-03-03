@@ -31,11 +31,11 @@ public class UserAction {
 	private UserService userService;
 	
 	@RequestMapping("/login")
-	public @ResponseBody Map login(String username,String password,Model model){
+	public @ResponseBody Map login(String username,String password,HttpSession session){
 		Map map = new HashMap();
 		User loginedUser = userService.login(username, password);
 		if(null!=loginedUser){
-			model.addAttribute("logineduser", loginedUser);
+			session.setAttribute("logineduser", loginedUser);
 			map.put("ret", 1);
 			map.put("url", "emp/list.do");
 		} else {

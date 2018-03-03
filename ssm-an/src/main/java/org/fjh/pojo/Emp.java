@@ -24,51 +24,70 @@ public class Emp implements Serializable {
 	private String job;
 	@JsonFormat(pattern="yyyy-MM-dd", timezone = "GMT+8")//不加时区，中国会少一天
 	private Date   hiredate;
-	private String dept;
 	
 	
-	@Override
-	public String toString() {
-		return "Emp [empid=" + empid + ", empno=" + empno + ", ename=" + ename + ", job=" + job + ", hiredate="
-				+ hiredate + ", dept=" + dept + "]";
-	}
 	
+	private String did;
+	
+	private Dept   dept;
+
 	public String getEmpid() {
 		return empid;
 	}
+
 	public void setEmpid(String empid) {
 		this.empid = empid;
 	}
+
 	public String getEmpno() {
 		return empno;
 	}
+
 	public void setEmpno(String empno) {
 		this.empno = empno;
 	}
+
 	public String getEname() {
 		return ename;
 	}
+
 	public void setEname(String ename) {
 		this.ename = ename;
 	}
+
 	public String getJob() {
 		return job;
 	}
+
 	public void setJob(String job) {
 		this.job = job;
 	}
+
 	public Date getHiredate() {
 		return hiredate;
 	}
+
 	public void setHiredate(Date hiredate) {
 		this.hiredate = hiredate;
 	}
-	public String getDept() {
+
+	public String getDid() {
+		return did;
+	}
+
+	public void setDid(String did) {
+		this.did = did;
+	}
+
+	public Dept getDept() {
 		return dept;
 	}
-	public void setDept(String dept) {
+
+	public void setDept(Dept dept) {
 		this.dept = dept;
 	}
+	
+	
 	
 	
 }

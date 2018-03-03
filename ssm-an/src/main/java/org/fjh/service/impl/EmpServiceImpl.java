@@ -58,7 +58,7 @@ public class EmpServiceImpl implements EmpService {
 		EmpVo vo = new EmpVo();
 		vo.setBegin(begin);
 		vo.setEnd(end);
-		vo.setDept(emp.getDept());
+		vo.setDid(emp.getDid());
 		vo.setEmpno(emp.getEmpno());
 		vo.setEname(emp.getEname());
 		vo.setJob(emp.getJob());
