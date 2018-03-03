@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.fjh.dao.EmpMapper">
+	<!-- 开启二级缓存  -->
+	<cache />
+	<sql id="sql_where">
+	<where>
+		<if test="empno!=null and empno!=''">
+			and empno = #{empno}
+		</if>
+		<if test="ename!=null and ename!=''">
+			and ename like concat(concat('%',#{ename}),'%')
+		</if>
+		<if test="job!=null and job!=''">
+			and job=#{job}
+		</if>
+		<if test="hiredate!=null and hiredate!=''">
+			and hiredate=#{hiredate}
+		</if>
+		<if test="dept!=null and dept!=''">
+			and dept=#{dept}
+		</if>	
+		</where>
+	</sql>
+	
+	<insert id="insert">
+		<selectKey keyProperty="empid" order="BEFORE" resultType="string">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into tbl_emp
+		values(#{empid},#{empno},#{ename},#{job},#{hiredate},#{dept});
+	</insert>
+	
+	<!-- 
+	<select id="list"  resultType="org.fjh.pojo.Emp" >
+		select * from emp
+		where 1=1
+		<include refid="sql_where"/>
+	</select>
+	 -->
+	
+	<select id="getTotalRow"  resultType="int">
+		select count(*) from tbl_emp
+		<include refid="sql_where"/>
+	</select>
+	
+	
+	<select id="list"  resultType="org.fjh.pojo.Emp">
+		select * from tbl_emp 
+		<include refid="sql_where"/>	
+		<if test="begin!=null and end!=null">
+				limit #{begin},#{end}
+		</if>
+	</select>
+	
+	
+	<delete id="deleteByPrimary">
+		delete from tbl_emp where empid=#{empid}
+	</delete>
+	
+	
+	<delete id="deleteByIds">
+		delete from tbl_emp where empid in
+		<foreach collection="ids" item="id" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<select id="selectByPrimaryKey" resultType="org.fjh.pojo.Emp">
+		select *from tbl_emp where empid= #{empid}
+	</select>
+	
+	<update id="updateByPrimaryKey">
+		update tbl_emp 
+			<set>
+				<if test="empno!=null and empno!=''">
+			 		empno=#{empno},
+				</if>
+				<if test="ename!=null and ename!=''">
+					 ename=#{ename},
+				</if>
+				<if test="job!=null and job!=''">
+					 job=#{job},
+				</if>
+				<if test="hiredate!=null">
+					 hiredate=#{hiredate},
+				</if>
+				<if test="dept!=null and dept!=''">
+					dept=#{dept}
+				</if>	
+			</set>
+			where empid=#{empid}
+	</update>
+	
+	<select id="getByEmpno" resultType="org.fjh.pojo.Emp">
+		select *from tbl_emp where empno=#{empno}
+	</select>
+</mapper>
