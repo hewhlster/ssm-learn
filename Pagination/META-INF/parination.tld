@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd"
+    version="2.0">
+    
+  <description>JSTL 1.1 core library</description>
+  <display-name>JSTL core</display-name>
+	<tlib-version>2.0</tlib-version>
+	<jsp-version>1.2</jsp-version>
+	<short-name>fanjianhua-parination</short-name>
+  <uri>http://www.fanjianhua.com/jack/parination</uri>
+
+  <!-- 显示IP地址 -->
+  <tag>
+    <description>
+       分页标签，使用中请引入bootstarp
+    </description>
+    <name>parination</name>
+    <tag-class>org.fjh.tag.Pagination</tag-class>
+    <body-content>empty</body-content>
+    <!-- 请求的url -->
+     <attribute>
+	    <name>url</name>
+	    <required>true</required>
+	    <rtexprvalue>true</rtexprvalue>
+ 	 </attribute>
+  	<!-- 每页上的记录数 -->
+  	<attribute>
+	    <name>pageSize</name>
+	    <required>false</required>
+	    <rtexprvalue>true</rtexprvalue>
+  	</attribute>
+  
+  </tag>
+</taglib>
